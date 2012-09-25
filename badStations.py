@@ -1,6 +1,6 @@
 import anydbm
 import pickle
-
+import station_names
 import operator
 
 def checkForLowStation(data, amount, cumulative):
@@ -21,17 +21,15 @@ def printWarnings(cumulative):
     bikesWarnings[int(station)] = cumulative[station]["bikes_warnings"]
     emptyWarnings[int(station)] = cumulative[station]["empty_warnings"]
   
-  oldBikeWarnings = bikesWarnings[:];
-  oldEmpyWarnings = emptyWarnings[:];
-
-  bikesWarnings.sort(reverse=True)
-  emptyWarnings.sort(reverse=True)
+  bikesWarningsIndex = [i[0] for i in sorted(enumerate(bikesWarnings), reverse=True, key=lambda x:x[1])]
+  emptyWarningsIndex = [i[0] for i in sorted(enumerate(emptyWarnings), reverse=True, key=lambda x:x[1])]
   
-  print oldBikeWarnings.index(bikesWarnings[0]), bikesWarnings[0]
-  print emptyWarnings.index(emptyWarnings[0]), emptyWarnings[0]#[0:5]
-  print "second worst"
-  print oldBikeWarnings.index(bikesWarnings[1]), bikesWarnings[1]
-  print emptyWarnings.index(emptyWarnings[1]), emptyWarnings[1]#[0:5]
+  for i in range(4):
+    indexBikes = bikesWarningsIndex[i]
+    indexEmpty = emptyWarningsIndex[i]
+    
+    print "Waring on bikes", i, indexBikes, bikesWarnings[i], station_names.get_name(indexBikes)
+    print "Warning on empty", i, indexEmpty, emptyWarnings[i], station_names.get_name(indexEmpty)
 
 def main():
   db = anydbm.open("bikes.db", 'r')
